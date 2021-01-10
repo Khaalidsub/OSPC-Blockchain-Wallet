@@ -2,7 +2,7 @@ export interface ITransaction {
   transactionId?: String;
   sender: String;
   recipient: String;
-  transctionType?: TransactionType;
+  transctionType: TransactionType;
   data: Object;
 }
 
