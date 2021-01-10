@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { Controller } from '@nestjs/common/decorators/core';
 import {
   Body,
@@ -16,6 +17,7 @@ import { postBroadcast } from 'src/util';
 import { v1 as uuid } from 'uuid';
 @Controller('blockchain')
 export class BlockchainController {
+  private readonly logger = new Logger(BlockchainController.name);
   private nodeAddress = uuid().split('-').join('');
   constructor(private blockchain: BlockChain) {}
   @Get()

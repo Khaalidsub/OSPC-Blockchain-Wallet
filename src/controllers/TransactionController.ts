@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { Controller } from '@nestjs/common/decorators/core';
 import {
   Body,
@@ -13,6 +14,7 @@ import { Transaction } from 'src/models/Transaction';
 
 @Controller('transaction')
 export class TransactionController {
+  private readonly logger = new Logger(TransactionController.name);
   constructor(private blockchain: BlockChain, private keymaker: KeyMaker) {}
   @Post()
   addTransaction(transaction: Transaction, signature: string) {

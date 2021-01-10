@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { BlockChain } from '../models/BlockChain';
 
 export enum Routes {
-  blockchain = 'blockchain',
+  blockchain = '',
   recieveNewBlock = 'recieve-new-block',
 }
 
