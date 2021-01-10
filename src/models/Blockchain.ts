@@ -46,7 +46,7 @@ export class BlockChain {
     this.pendingTransactions.push(transaction);
     return this.getLastBlock()['index'] + 1;
   }
-  IHashBlock(
+  hashBlock(
     previousBlockHash: String,
     currentBlockData: IHashBlock,
     nonce: number,
@@ -60,10 +60,10 @@ export class BlockChain {
 
   proofOfWork(previousBlockHash: String, currentBlockData: IHashBlock) {
     let nonce = 0;
-    let hash = this.IHashBlock(previousBlockHash, currentBlockData, nonce);
+    let hash = this.hashBlock(previousBlockHash, currentBlockData, nonce);
     while (hash.substring(0, 4) !== '0000') {
       nonce++;
-      hash = this.IHashBlock(previousBlockHash, currentBlockData, nonce);
+      hash = this.hashBlock(previousBlockHash, currentBlockData, nonce);
     }
 
     return nonce;
@@ -75,7 +75,7 @@ export class BlockChain {
     for (var i = 1; i < blockchain.length; i++) {
       const currentBlock = blockchain[i];
       const prevBlock = blockchain[i - 1];
-      const blockHash = this.IHashBlock(
+      const blockHash = this.hashBlock(
         prevBlock['hash'] as String,
         {
           transactions: currentBlock['transactions'],
