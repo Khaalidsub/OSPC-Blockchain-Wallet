@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common/decorators/core';
 import {
   generateKeyPairSync,
   KeyObject,
@@ -7,6 +8,7 @@ import {
 } from 'crypto';
 import { Transaction } from './Transaction';
 
+@Injectable()
 export class KeyMaker {
   public publicKey: KeyObject;
   public currentNodePublicKey: KeyObject;
