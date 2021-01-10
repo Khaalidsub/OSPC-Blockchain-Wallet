@@ -11,7 +11,7 @@ import { BlockChain } from 'src/models/Blockchain';
 import { KeyMaker } from 'src/models/KeyMaker';
 import { Transaction } from 'src/models/Transaction';
 
-@Controller('blockchain')
+@Controller('transaction')
 export class TransactionController {
   constructor(private blockchain: BlockChain, private keymaker: KeyMaker) {}
   @Post()

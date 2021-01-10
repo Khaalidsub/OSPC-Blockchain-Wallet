@@ -10,7 +10,7 @@ import {
 import { KeyMaker } from 'src/models/KeyMaker';
 
 @Controller('keymaker')
-export class BlockchainController {
+export class KeyMakerController {
   constructor(private keymaker: KeyMaker) {}
   @Post()
   generateKeys() {}
