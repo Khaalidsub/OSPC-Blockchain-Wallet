@@ -38,19 +38,20 @@ export class BlockChain {
     return newBlock;
   }
 
-  getLastBlock() {
+  getLastBlock(): IHashBlock {
     return this.chain[this.chain.length - 1];
   }
 
-  addTransactionToPendingTransaction(transaction: ITransaction) {
+  addTransactionToPendingTransaction(transaction: ITransaction): number {
     this.pendingTransactions.push(transaction);
     return this.getLastBlock()['index'] + 1;
   }
+
   hashBlock(
     previousBlockHash: String,
     currentBlockData: IHashBlock,
     nonce: number,
-  ) {
+  ): string {
     const dataAsString =
       previousBlockHash + nonce.toString() + JSON.stringify(currentBlockData);
     const hash = new sha256().update(dataAsString).digest('hex');
@@ -58,7 +59,7 @@ export class BlockChain {
     return hash;
   }
 
-  proofOfWork(previousBlockHash: String, currentBlockData: IHashBlock) {
+  proofOfWork(previousBlockHash: String, currentBlockData: IHashBlock): number {
     let nonce = 0;
     let hash = this.hashBlock(previousBlockHash, currentBlockData, nonce);
     while (hash.substring(0, 4) !== '0000') {
@@ -69,7 +70,7 @@ export class BlockChain {
     return nonce;
   }
 
-  chainIsValid(blockchain: IHashBlock[]) {
+  chainIsValid(blockchain: IHashBlock[]): boolean {
     let validChain = true;
 
     for (var i = 1; i < blockchain.length; i++) {
@@ -105,16 +106,18 @@ export class BlockChain {
     return validChain;
   }
 
-  getBlock(blockHash: String) {
+  getBlock(blockHash: String): IHashBlock {
     let correctBlock = null;
     this.chain.forEach((block) => {
       if (block.hash === blockHash) correctBlock = block;
     });
     return correctBlock;
   }
-  getTransaction(transactionId: String) {
-    let correctTransaction = null;
-    let correctBlock = null;
+  getTransaction(
+    transactionId: String,
+  ): { transaction: ITransaction; block: IHashBlock } {
+    let correctTransaction: ITransaction = null;
+    let correctBlock: IHashBlock = null;
 
     this.chain.forEach((block) => {
       block.transactions.forEach((transaction) => {
@@ -131,7 +134,7 @@ export class BlockChain {
     };
   }
 
-  getAddressData(address: String) {
+  getAddressData(address: String): ITransaction[] {
     const addressTransactions: ITransaction[] = [];
     this.chain.forEach((block) => {
       block.transactions.forEach((transaction) => {
@@ -144,8 +147,6 @@ export class BlockChain {
       });
     });
 
-    return {
-      addressTransactions: addressTransactions,
-    };
+    return addressTransactions;
   }
 }
