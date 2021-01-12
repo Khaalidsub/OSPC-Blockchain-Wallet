@@ -16,9 +16,15 @@ import { Transaction } from 'src/models/Transaction';
 export class TransactionController {
   private readonly logger = new Logger(TransactionController.name);
   constructor(private blockchain: BlockChain, private keymaker: KeyMaker) {}
-  @Post()
+  @Post('add')
   addTransaction(transaction: Transaction, signature: string) {
-    this.keymaker.verifySignature(transaction, signature);
+    const isValid = this.keymaker.verifySignature(transaction, signature);
+    this.logger.verbose(`adding a transaction.. ${transaction} ${signature}`);
+    if (isValid) {
+      this.blockchain.addTransactionToPendingTransaction(transaction);
+      return true;
+    }
+    return false;
   }
   //   broadCastTransaction() {}
   @Get(':id')
