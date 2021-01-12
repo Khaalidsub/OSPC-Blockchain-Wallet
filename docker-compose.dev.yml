@@ -12,7 +12,7 @@ services:
     image: 'sleepinglotus/wallet-dev'
     container_name: wallet1
     environment:
-      - URL=http://localhost:3001
+      - URL=http://localhost/wallet1
     ports:
       - '3001:3000'
     volumes:
@@ -24,7 +24,7 @@ services:
     image: 'sleepinglotus/wallet-dev'
     container_name: wallet2
     environment:
-      - URL=http://localhost:3002
+      - URL=http://localhost/wallet2
     ports:
       - '3002:3000'
     volumes:
@@ -36,7 +36,7 @@ services:
     image: 'sleepinglotus/wallet-dev'
     container_name: wallet3
     environment:
-      - URL=http://localhost:3003
+      - URL=http://localhost/wallet3
     ports:
       - '3003:3000'
     volumes:
@@ -44,6 +44,22 @@ services:
       - /usr/src/app/node_modules
     stdin_open: true
     tty: true
+  nginx:
+    image: 'sleepinglotus/wallet-nginx'
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+
+    container_name: wallet-nginx
+    restart: always
+    depends_on:
+      - wallet1
+      - wallet2
+      - wallet3
+    ports:
+      - '3050:80'
+    environment:
+      - HOST=127.0.0.1
 networks:
   default:
     name: wallet_network_dev

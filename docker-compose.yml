@@ -30,3 +30,8 @@ services:
       - '3003:3000'
     stdin_open: true
     tty: true
+  nginx:
+    image: 'sleepinglotus/wallet-nginx'
+    container_name: nginx
+    ports:
+      - 80
