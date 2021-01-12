@@ -8,6 +8,7 @@ import {
   Put,
   Param,
 } from '@nestjs/common/decorators/http';
+import axios from 'axios';
 import { KeyObject } from 'crypto';
 import { BlockChain } from 'src/models/Blockchain';
 import { KeyMaker } from 'src/models/KeyMaker';
@@ -18,10 +19,12 @@ export class KeyMakerController {
   private readonly logger = new Logger(KeyMakerController.name);
   constructor(private keymaker: KeyMaker, private chain: BlockChain) {}
   @Post('generate')
-  generateKeys() {
+  async generateKeys() {
     const key = this.keymaker.generateKeyPair();
     //broadcastKey
-    getBroadcast(`keymaker/${this.keymaker.getPublicKey()}`, this.chain);
+    await axios.all(
+      getBroadcast(`keymaker/${this.keymaker.getPublicKey()}`, this.chain),
+    );
     return key;
   }
   @Get(':keyId')
