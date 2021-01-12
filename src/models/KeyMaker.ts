@@ -32,6 +32,12 @@ export class KeyMaker {
 
     return privateKey;
   }
+  setPublicKey(publicKey: KeyObject) {
+    this.publicKey = publicKey;
+  }
+  getPublicKey() {
+    return this.publicKey;
+  }
   // addNodeKeys(keys: KeyObject[]) {
   //   keys.forEach((key) => {
   //     if (!this.nodePublicKeys.indexOf(key)) {
