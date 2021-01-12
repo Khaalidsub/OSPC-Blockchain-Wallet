@@ -1,24 +1,15 @@
 import { Logger } from '@nestjs/common';
 import { Controller } from '@nestjs/common/decorators/core';
-import {
-  Body,
-  Post,
-  Get,
-  Delete,
-  Put,
-  Param,
-} from '@nestjs/common/decorators/http';
+import { Body, Post, Get } from '@nestjs/common/decorators/http';
 import axios from 'axios';
 import { AxiosResponse } from 'axios';
-import { IHashBlock, ITransaction } from 'src/interfaces';
-import { BlockChain } from 'src/models/Blockchain';
-import { Transaction } from 'src/models/Transaction';
-import { getBroadcast, postBroadcast } from 'src/util';
+import { IHashBlock, ITransaction } from '../interfaces';
+import { BlockChain } from '../models/Blockchain';
+import { getBroadcast, postBroadcast } from '../util';
 import { v1 as uuid } from 'uuid';
 @Controller('blockchain')
 export class BlockchainController {
   private readonly logger = new Logger(BlockchainController.name);
-  private nodeAddress = uuid().split('-').join('');
   constructor(private blockchain: BlockChain) {}
   @Get()
   getchain() {

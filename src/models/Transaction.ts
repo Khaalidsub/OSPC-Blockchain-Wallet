@@ -1,4 +1,4 @@
-import { ITransaction, TransactionType } from 'src/interfaces';
+import { ITransaction, TransactionType } from '../interfaces';
 
 export class Transaction implements ITransaction {
   constructor(
