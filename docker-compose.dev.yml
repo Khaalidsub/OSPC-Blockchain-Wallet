@@ -1,0 +1,49 @@
+version: '3.7'
+x-services-volume: &volume-dir
+  type: bind
+  source: .
+  target: /usr/src/app
+
+services:
+  wallet1:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.dev
+    image: 'sleepinglotus/wallet-dev'
+    container_name: wallet1
+    environment:
+      - URL=http://localhost:3001
+    ports:
+      - '3001:3000'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    stdin_open: true
+    tty: true
+  wallet2:
+    image: 'sleepinglotus/wallet-dev'
+    container_name: wallet2
+    environment:
+      - URL=http://localhost:3002
+    ports:
+      - '3002:3000'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    stdin_open: true
+    tty: true
+  wallet3:
+    image: 'sleepinglotus/wallet-dev'
+    container_name: wallet3
+    environment:
+      - URL=http://localhost:3003
+    ports:
+      - '3003:3000'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    stdin_open: true
+    tty: true
+networks:
+  default:
+    name: wallet_network_dev
