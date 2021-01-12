@@ -6,6 +6,8 @@ services:
       dockerfile: ./Dockerfile
     image: 'sleepinglotus/wallet'
     container_name: wallet1
+    environment:
+      - URL=http://localhost:3001
     ports:
       - '3001:3000'
     stdin_open: true
@@ -13,6 +15,8 @@ services:
   wallet2:
     image: 'sleepinglotus/wallet'
     container_name: wallet2
+    environment:
+      - URL=http://localhost:3002
     ports:
       - '3002:3000'
     stdin_open: true
@@ -20,6 +24,8 @@ services:
   wallet3:
     image: 'sleepinglotus/wallet'
     container_name: wallet3
+    environment:
+      - URL=http://localhost:3003
     ports:
       - '3003:3000'
     stdin_open: true

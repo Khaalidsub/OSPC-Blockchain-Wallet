@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common/decorators/core';
 import { sha256 } from 'sha.js';
 import { IHashBlock, ITransaction } from '../interfaces';
 
-const currentNodeUrls = `${process.argv[3]}/rest`;
+const currentNodeUrls = `${process.env.URL}`;
 
 @Injectable()
 export class BlockChain {
