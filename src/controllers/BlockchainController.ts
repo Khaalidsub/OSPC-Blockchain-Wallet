@@ -13,7 +13,7 @@ import { AxiosResponse } from 'axios';
 import { IHashBlock, ITransaction } from 'src/interfaces';
 import { BlockChain } from 'src/models/Blockchain';
 import { Transaction } from 'src/models/Transaction';
-import { postBroadcast } from 'src/util';
+import { getBroadcast, postBroadcast } from 'src/util';
 import { v1 as uuid } from 'uuid';
 @Controller('blockchain')
 export class BlockchainController {
@@ -23,6 +23,59 @@ export class BlockchainController {
   @Get()
   getchain() {
     return this.blockchain;
+  }
+
+  @Get('mine')
+  async mine() {
+    const lastBlock = this.blockchain.getLastBlock();
+    const previousBlockHash = lastBlock['hash'] as String;
+    const currentBlockData = {
+      transactions: this.blockchain.pendingTransactions,
+      index: lastBlock['index'] + 1,
+    };
+    const nonce = this.blockchain.proofOfWork(
+      previousBlockHash,
+      currentBlockData,
+    );
+    const blockHash = this.blockchain.hashBlock(
+      previousBlockHash,
+      currentBlockData,
+      nonce,
+    );
+    const newBlock = this.blockchain.createNewBlock(
+      nonce,
+      previousBlockHash,
+      blockHash,
+    );
+    this.logger.log(`new block has been mined.. ${newBlock} `);
+    try {
+      const requestPromises: Promise<
+        AxiosResponse<any>
+      >[] = postBroadcast<IHashBlock>(
+        'recieve-new-block',
+        this.blockchain,
+        newBlock,
+      );
+
+      await axios.all(requestPromises);
+      // const transaction: PaymentTransaction = {
+      //   transactionType: TransactionType.mine,
+      //   data: 12.5,
+      //   sender: "00",
+      //   recipient: this.nodeAddress,
+      // };
+      // await axios.post(`${this.blockchain.currentNodeUrl}/transaction/broadcast`, {
+      //   transaction,
+      //   signature: this.keyMaker.signNodeData(transaction),
+      // });
+
+      return {
+        note: 'New blockchain mined & broadcast successfully',
+        blockchain: newBlock,
+      };
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   @Post('/recieve-new-block')
@@ -45,13 +98,16 @@ export class BlockchainController {
       };
     }
   }
+  @Get('consensus')
   async makeConsensus() {
-    const requestPromises: Promise<AxiosResponse<BlockChain>>[] = [];
-    this.blockchain.networkNodes.forEach((networkNodeUrl) => {
-      requestPromises.push(axios.get(`${networkNodeUrl}/blockchain`));
-    });
+    // const requestPromises: Promise<AxiosResponse<BlockChain>>[] = [];
+    // this.blockchain.networkNodes.forEach((networkNodeUrl) => {
+    //   requestPromises.push(axios.get(`${networkNodeUrl}/blockchain`));
+    // });
 
-    const blockchains = await axios.all(requestPromises);
+    const blockchains = await axios.all(
+      getBroadcast('blockchain', this.blockchain),
+    );
     const currentChainLength = this.blockchain.chain.length;
     let maxChainLength = currentChainLength;
     let newLongestChain: IHashBlock[] = [];
@@ -80,57 +136,6 @@ export class BlockchainController {
         note: 'This chain has been replaced.',
         chain: this.blockchain.chain,
       };
-    }
-  }
-
-  async mine() {
-    const lastBlock = this.blockchain.getLastBlock();
-    const previousBlockHash = lastBlock['hash'] as String;
-    const currentBlockData = {
-      transactions: this.blockchain.pendingTransactions,
-      index: lastBlock['index'] + 1,
-    };
-    const nonce = this.blockchain.proofOfWork(
-      previousBlockHash,
-      currentBlockData,
-    );
-    const blockHash = this.blockchain.hashBlock(
-      previousBlockHash,
-      currentBlockData,
-      nonce,
-    );
-    const newBlock = this.blockchain.createNewBlock(
-      nonce,
-      previousBlockHash,
-      blockHash,
-    );
-    try {
-      const requestPromises: Promise<
-        AxiosResponse<any>
-      >[] = postBroadcast<IHashBlock>(
-        'recieve-new-block',
-        this.blockchain,
-        newBlock,
-      );
-
-      await axios.all(requestPromises);
-      // const transaction: PaymentTransaction = {
-      //   transactionType: TransactionType.mine,
-      //   data: 12.5,
-      //   sender: "00",
-      //   recipient: this.nodeAddress,
-      // };
-      // await axios.post(`${this.blockchain.currentNodeUrl}/transaction/broadcast`, {
-      //   transaction,
-      //   signature: this.keyMaker.signNodeData(transaction),
-      // });
-
-      return {
-        note: 'New blockchain mined & broadcast successfully',
-        blockchain: newBlock,
-      };
-    } catch (error) {
-      console.error(error);
     }
   }
 }
