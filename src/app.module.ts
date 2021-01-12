@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { HttpModule, Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
 import { BlockchainController } from './controllers/BlockchainController';
 import { KeyMakerController } from './controllers/KeyMakerController';
@@ -8,7 +8,7 @@ import { BlockChain } from './models/Blockchain';
 import { KeyMaker } from './models/KeyMaker';
 
 @Module({
-  imports: [ScheduleModule.forRoot()],
+  imports: [ScheduleModule.forRoot(), HttpModule],
   controllers: [
     TransactionController,
     KeyMakerController,
