@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { Controller } from '@nestjs/common/decorators/core';
-import { Post, Get } from '@nestjs/common/decorators/http';
+import { Post, Get, Param } from '@nestjs/common/decorators/http';
 import { BlockChain } from '../models/Blockchain';
 import { KeyMaker } from '../models/KeyMaker';
 import { Transaction } from '../models/Transaction';
@@ -21,7 +21,7 @@ export class TransactionController {
   }
   //   broadCastTransaction() {}
   @Get(':id')
-  getTransaction(transactionId: string) {
+  getTransaction(@Param('id') transactionId: string) {
     return this.blockchain.getTransaction(transactionId);
   }
 }
