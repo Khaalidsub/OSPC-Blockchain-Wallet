@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
 import { BlockchainController } from './controllers/BlockchainController';
 import { KeyMakerController } from './controllers/KeyMakerController';
+import { NodeController } from './controllers/NodeController';
 import { TransactionController } from './controllers/TransactionController';
 import { BlockChain } from './models/Blockchain';
 import { KeyMaker } from './models/KeyMaker';
@@ -12,6 +13,7 @@ import { KeyMaker } from './models/KeyMaker';
     TransactionController,
     KeyMakerController,
     BlockchainController,
+    NodeController,
   ],
   providers: [BlockChain, KeyMaker],
 })

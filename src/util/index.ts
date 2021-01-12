@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { BlockChain } from '../models/BlockChain';
+import { BlockChain } from 'src/models/Blockchain';
 
 export enum Routes {
   blockchain = '',
