@@ -1,0 +1,32 @@
+version: '3.7'
+services:
+  wallet1:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: 'sleepinglotus/wallet1'
+    container_name: wallet1
+    ports:
+      - '3001:3000'
+    stdin_open: true
+    tty: true
+  wallet2:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: 'sleepinglotus/wallet2'
+    container_name: wallet2
+    ports:
+      - '3002:3000'
+    stdin_open: true
+    tty: true
+  wallet3:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: 'sleepinglotus/wallet3'
+    container_name: wallet3
+    ports:
+      - '3003:3000'
+    stdin_open: true
+    tty: true
