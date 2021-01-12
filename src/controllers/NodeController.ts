@@ -20,21 +20,37 @@ export class NodeController {
   //friend within the network who is telling others about his friend
   @Post('/register-and-broadcast-node')
   async registerNodeAndBroadCast(@Body('newNodeUrl') newNodeUrl: string) {
-    this.logger.log(`register nodes and broadcast... ${newNodeUrl}`);
-
+    this.logger.log(
+      `register nodes and broadcast with the address: ${newNodeUrl}`,
+    );
     if (this.blockchain.networkNodes.indexOf(newNodeUrl) == -1)
       this.blockchain.networkNodes.push(newNodeUrl);
+    try {
+      const result = await axios.get(`${newNodeUrl}/node`);
+      this.logger.warn(`trying ${result}`);
 
-    const requestBroadcast: Promise<
-      AxiosResponse<any>
-    >[] = postBroadcast<string>('register-node', this.blockchain, newNodeUrl);
+      const requestBroadcast: Promise<
+        AxiosResponse<any>
+      >[] = postBroadcast<string>(
+        'node/register-node',
+        this.blockchain,
+        newNodeUrl,
+      );
 
-    await axios.all(requestBroadcast);
-    const requestRegisterBulk: Promise<AxiosResponse<any>>[] = postBroadcast<
-      String[]
-    >('register-nodes-bulk', this.blockchain, this.blockchain.networkNodes);
-    await axios.all(requestRegisterBulk);
-    return { note: 'New node registered with network successfully.' };
+      await axios.all(requestBroadcast);
+      const requestRegisterBulk: Promise<AxiosResponse<any>>[] = postBroadcast<
+        String[]
+      >(
+        'node/register-nodes-bulk',
+        this.blockchain,
+        this.blockchain.networkNodes,
+      );
+      await axios.all(requestRegisterBulk);
+      return { note: 'New node registered with network successfully.' };
+    } catch (error) {
+      this.logger.error(error);
+      return error.message;
+    }
   }
 
   @Post('/register-node')
