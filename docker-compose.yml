@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-  wallet1:
+  wallet1-prod:
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -12,16 +12,16 @@ services:
       - '3001:3000'
     stdin_open: true
     tty: true
-  wallet2:
-    image: 'sleepinglotus/wallet'
-    container_name: wallet2
-    environment:
-      - URL=http://localhost:3002
-    ports:
-      - '3002:3000'
-    stdin_open: true
-    tty: true
-  wallet3:
+  # wallet2-prod:
+  #   image: 'sleepinglotus/wallet'
+  #   container_name: wallet2
+  #   environment:
+  #     - URL=http://localhost:3002
+  #   ports:
+  #     - '3002:3000'
+  #   stdin_open: true
+  #   tty: true
+  # wallet3-prod:
     image: 'sleepinglotus/wallet'
     container_name: wallet3
     environment:
@@ -30,8 +30,15 @@ services:
       - '3003:3000'
     stdin_open: true
     tty: true
-  nginx:
-    image: 'sleepinglotus/wallet-nginx'
-    container_name: nginx
+  nginx-prod:
+    image: 'sleepinglotus/wallet-nginx-prod'
+
+    container_name: nginx-prod
+    build:
+      context: ./nginx
+      dockerfile: ./Dockerfile
     ports:
-      - 80
+      - '80:80'
+networks:
+  default:
+    name: 'ospc-production'
