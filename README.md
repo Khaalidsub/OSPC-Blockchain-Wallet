@@ -1,1 +1,1 @@
-# Online Student Peer Coaching System
+# Online Student Peer Coaching Blockchain Wallet
