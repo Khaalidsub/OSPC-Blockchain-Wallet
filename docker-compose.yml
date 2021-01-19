@@ -22,14 +22,14 @@ services:
   #   stdin_open: true
   #   tty: true
   # wallet3-prod:
-    image: 'sleepinglotus/wallet'
-    container_name: wallet3
-    environment:
-      - URL=http://localhost:3003
-    ports:
-      - '3003:3000'
-    stdin_open: true
-    tty: true
+  # image: 'sleepinglotus/wallet'
+  # container_name: wallet3
+  # environment:
+  #   - URL=http://localhost:3003
+  # ports:
+  #   - '3003:3000'
+  # stdin_open: true
+  # tty: true
   nginx-prod:
     image: 'sleepinglotus/wallet-nginx-prod'
 

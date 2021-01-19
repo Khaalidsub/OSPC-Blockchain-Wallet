@@ -1,5 +1,6 @@
 import { HttpModule, Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
+import { AppController } from './controllers/AppController';
 import { BlockchainController } from './controllers/BlockchainController';
 import { KeyMakerController } from './controllers/KeyMakerController';
 import { NodeController } from './controllers/NodeController';
@@ -14,6 +15,7 @@ import { KeyMaker } from './models/KeyMaker';
     KeyMakerController,
     BlockchainController,
     NodeController,
+    AppController,
   ],
   providers: [BlockChain, KeyMaker],
 })

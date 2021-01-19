@@ -54,12 +54,8 @@ services:
     restart: always
     depends_on:
       - wallet1
-      - wallet2
-      - wallet3
     ports:
-      - '3050:80'
-    environment:
-      - HOST=127.0.0.1
+      - '80:80'
 networks:
   default:
     name: wallet_network_dev
