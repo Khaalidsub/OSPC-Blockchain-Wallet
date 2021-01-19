@@ -6,6 +6,7 @@ import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import { AllExceptionsFilter } from './exceptions.filter';
 import { join } from 'path';
+import * as hbs from 'express-hbs';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {});
   const { httpAdapter } = app.get(HttpAdapterHost);
@@ -20,6 +21,15 @@ async function bootstrap() {
         extended: true,
       }),
     );
+  // app.set('view options', { layout: 'main' });
+  app.engine(
+    'hbs',
+    hbs.express4({
+      partialsDir: `/usr/src/app/views/partials`,
+      defaultLayout: `/usr/src/app/views/layouts/main`,
+    }),
+  );
+  console.log(__dirname);
 
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));

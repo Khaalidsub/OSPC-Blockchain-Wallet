@@ -49,11 +49,8 @@ services:
     build:
       dockerfile: Dockerfile.dev
       context: ./nginx
-
     container_name: wallet-nginx
     restart: always
-    depends_on:
-      - wallet1
     ports:
       - '80:80'
 networks:
