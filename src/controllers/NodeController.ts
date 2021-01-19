@@ -23,7 +23,10 @@ export class NodeController {
     this.logger.log(
       `register nodes and broadcast with the address: ${newNodeUrl}`,
     );
-    if (this.blockchain.networkNodes.indexOf(newNodeUrl) == -1)
+    if (
+      this.blockchain.networkNodes.indexOf(newNodeUrl) == -1 &&
+      newNodeUrl !== null
+    )
       this.blockchain.networkNodes.push(newNodeUrl);
     try {
       const { data } = await axios.get(`${newNodeUrl}/node`);
@@ -56,6 +59,10 @@ export class NodeController {
   @Post('/register-node')
   registerNode(@Body('newNodeUrl') newNodeUrl: String) {
     this.logger.log(`register node... ${newNodeUrl}`);
+    if (newNodeUrl === undefined || newNodeUrl === null) {
+      this.logger.error(`undefined node url!`);
+      return;
+    }
     if (
       isNodeExist(
         this.blockchain.networkNodes,

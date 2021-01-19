@@ -9,7 +9,9 @@ export enum Routes {
 export const postBroadcast = <T>(url: string, block: BlockChain, data: T) => {
   const requestPromises: Promise<AxiosResponse<any>>[] = [];
   block.networkNodes.forEach((networkNodeUrl) => {
-    requestPromises.push(axios.post(`${networkNodeUrl}/${url}`, data));
+    if (networkNodeUrl !== null) {
+      requestPromises.push(axios.post(`${networkNodeUrl}/${url}`, data));
+    }
   });
   console.log('postBroadCast', ...requestPromises);
   return requestPromises;
@@ -28,7 +30,8 @@ export const isNodeExist = (
 ) => {
   const nodeNotAlreadyPresent = networkNodes.indexOf(newNode) == -1;
   const notCurrentNode = currentNode !== newNode;
-  return nodeNotAlreadyPresent && notCurrentNode;
+  const notNull = newNode !== null || newNode !== undefined;
+  return nodeNotAlreadyPresent && notCurrentNode && notNull;
 };
 
 export const validateNodeStatus = (block: BlockChain) => {};
