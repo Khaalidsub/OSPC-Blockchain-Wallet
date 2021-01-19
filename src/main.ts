@@ -5,6 +5,7 @@ import * as session from 'express-session';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import { AllExceptionsFilter } from './exceptions.filter';
+import { join } from 'path';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {});
   const { httpAdapter } = app.get(HttpAdapterHost);
@@ -19,6 +20,10 @@ async function bootstrap() {
         extended: true,
       }),
     );
+
+  app.useStaticAssets(join(__dirname, '..', 'public'));
+  app.setBaseViewsDir(join(__dirname, '..', 'views'));
+  app.setViewEngine('hbs');
 
   await app.listen(3000);
 }
