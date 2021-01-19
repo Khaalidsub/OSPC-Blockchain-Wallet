@@ -26,8 +26,8 @@ export class NodeController {
     if (this.blockchain.networkNodes.indexOf(newNodeUrl) == -1)
       this.blockchain.networkNodes.push(newNodeUrl);
     try {
-      const result = await axios.get(`${newNodeUrl}/node`);
-      this.logger.warn(`trying ${result}`);
+      const { data } = await axios.get(`${newNodeUrl}/node`);
+      this.logger.warn(`trying ${data}`);
 
       const requestBroadcast: Promise<
         AxiosResponse<any>

@@ -11,14 +11,14 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
   app.set('trust proxy', 1);
   // app.enableCors({ origin: 'http://127.0.0.1:3050' });
-  // app
-  //   .use(cookieParser())
-  //   .use(bodyParser.json())
-  //   .use(
-  //     bodyParser.urlencoded({
-  //       extended: true,
-  //     }),
-  //   );
+  app
+    .use(cookieParser())
+    .use(bodyParser.json())
+    .use(
+      bodyParser.urlencoded({
+        extended: true,
+      }),
+    );
 
   await app.listen(3000);
 }

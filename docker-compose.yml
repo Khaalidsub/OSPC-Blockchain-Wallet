@@ -7,32 +7,31 @@ services:
     image: 'sleepinglotus/wallet'
     container_name: wallet1
     environment:
-      - URL=http://localhost:3001
+      - URL=http://nginx-prod/wallet1
     ports:
       - '3001:3000'
     stdin_open: true
     tty: true
-  # wallet2-prod:
-  #   image: 'sleepinglotus/wallet'
-  #   container_name: wallet2
-  #   environment:
-  #     - URL=http://localhost:3002
-  #   ports:
-  #     - '3002:3000'
-  #   stdin_open: true
-  #   tty: true
-  # wallet3-prod:
-  # image: 'sleepinglotus/wallet'
-  # container_name: wallet3
-  # environment:
-  #   - URL=http://localhost:3003
-  # ports:
-  #   - '3003:3000'
-  # stdin_open: true
-  # tty: true
+  wallet2-prod:
+    image: 'sleepinglotus/wallet'
+    container_name: wallet2
+    environment:
+      - URL=http://nginx-prod/wallet2
+    ports:
+      - '3002:3000'
+    stdin_open: true
+    tty: true
+  wallet3-prod:
+    image: 'sleepinglotus/wallet'
+    container_name: wallet3
+    environment:
+      - URL=http://nginx-prod/wallet3
+    ports:
+      - '3003:3000'
+    stdin_open: true
+    tty: true
   nginx-prod:
     image: 'sleepinglotus/wallet-nginx-prod'
-
     container_name: nginx-prod
     build:
       context: ./nginx

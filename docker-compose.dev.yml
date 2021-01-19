@@ -12,7 +12,7 @@ services:
     image: 'sleepinglotus/wallet-dev'
     container_name: wallet1
     environment:
-      - URL=http://localhost/wallet1
+      - URL=http://wallet-nginx/wallet1
     ports:
       - '3001:3000'
     volumes:
@@ -24,7 +24,7 @@ services:
     image: 'sleepinglotus/wallet-dev'
     container_name: wallet2
     environment:
-      - URL=http://localhost/wallet2
+      - URL=http://wallet-nginx/wallet2
     ports:
       - '3002:3000'
     volumes:
@@ -36,7 +36,7 @@ services:
     image: 'sleepinglotus/wallet-dev'
     container_name: wallet3
     environment:
-      - URL=http://localhost/wallet3
+      - URL=http://wallet-nginx/wallet3
     ports:
       - '3003:3000'
     volumes:
