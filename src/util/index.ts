@@ -19,8 +19,8 @@ export const postBroadcast = <T>(url: string, block: BlockChain, data: T) => {
 };
 export const getBroadcast = <T>(url: string, block: BlockChain) => {
   const requestPromises: Promise<AxiosResponse<any>>[] = [];
-  block.networkNodes.forEach((networkNodeUrl) => {
-    requestPromises.push(axios.get(`${networkNodeUrl}/${url}`));
+  block.networkNodes.forEach(({ nodeUrl }) => {
+    requestPromises.push(axios.get(`${nodeUrl}/${url}`));
   });
   return requestPromises;
 };

@@ -43,12 +43,15 @@ export class BlockchainController {
       const requestPromises: Promise<
         AxiosResponse<any>
       >[] = postBroadcast<IHashBlock>(
-        'recieve-new-block',
+        'blockchain/recieve-new-block',
         this.blockchain,
         newBlock,
       );
 
-      await axios.all(requestPromises);
+      const [{ data }] = await axios.all(requestPromises);
+      this.logger.error(`sending the new mined block : ${data}`);
+      console.log(data);
+
       // const transaction: PaymentTransaction = {
       //   transactionType: TransactionType.mine,
       //   data: 12.5,
@@ -70,7 +73,8 @@ export class BlockchainController {
   }
 
   @Post('/recieve-new-block')
-  recieveNewBlock(@Body('newBlock') newBlock: IHashBlock) {
+  recieveNewBlock(@Body() newBlock: IHashBlock) {
+    this.logger.warn(`in recieve new block : ${newBlock.index}`);
     const lastBlock = this.blockchain.getLastBlock();
     const correctHash = lastBlock.hash === newBlock.previousBlockHash;
     const correctIndex = lastBlock['index'] + 1 === newBlock['index'];
@@ -91,18 +95,13 @@ export class BlockchainController {
   }
   @Get('consensus')
   async makeConsensus() {
-    // const requestPromises: Promise<AxiosResponse<BlockChain>>[] = [];
-    // this.blockchain.networkNodes.forEach((networkNodeUrl) => {
-    //   requestPromises.push(axios.get(`${networkNodeUrl}/blockchain`));
-    // });
-
-    const blockchains = await axios.all(
-      getBroadcast('blockchain', this.blockchain),
+    const blockchains = await axios.all<AxiosResponse<BlockChain>>(
+      getBroadcast<BlockChain[]>('blockchain', this.blockchain),
     );
     const currentChainLength = this.blockchain.chain.length;
     let maxChainLength = currentChainLength;
-    let newLongestChain: IHashBlock[] = [];
-    let newPendingTransactions: ITransaction[] = [];
+    let newLongestChain: IHashBlock[] = null;
+    let newPendingTransactions: ITransaction[] = null;
 
     blockchains.forEach((blockchain) => {
       if (blockchain.data.chain.length > maxChainLength) {
