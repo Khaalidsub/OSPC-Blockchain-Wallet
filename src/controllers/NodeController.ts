@@ -2,11 +2,9 @@ import { Logger } from '@nestjs/common';
 import { Controller } from '@nestjs/common/decorators/core';
 import { Body, Post, Get, Delete } from '@nestjs/common/decorators/http';
 import axios, { AxiosResponse } from 'axios';
-import { INetwork } from 'src/interfaces';
 import { BlockChain } from 'src/models/Blockchain';
 import { KeyMaker } from 'src/models/KeyMaker';
-
-import { isNodeExist, postBroadcast } from 'src/util';
+import { postBroadcast } from 'src/util';
 
 @Controller('node')
 export class NodeController {

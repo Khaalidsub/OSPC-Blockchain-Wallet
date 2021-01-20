@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { Controller } from '@nestjs/common/decorators/core';
-import { Post, Get, Param } from '@nestjs/common/decorators/http';
+import { Get, Param } from '@nestjs/common/decorators/http';
 import axios from 'axios';
 import { KeyObject } from 'crypto';
 import { BlockChain } from '../models/Blockchain';
