@@ -26,6 +26,13 @@ async function bootstrap() {
   hbs.registerHelper('formatDate', function (date) {
     return format(new Date(date), 'PP');
   });
+  hbs.registerHelper('formatID', function (value: string) {
+    if (value.length > 4) {
+      const slicedID = value.slice(4, 9);
+      return slicedID;
+    }
+    return value;
+  });
   app.engine(
     'hbs',
     hbs.express4({

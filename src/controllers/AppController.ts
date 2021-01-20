@@ -11,7 +11,9 @@ export class AppController {
     const chains = this.blockchain.chain;
     const nodes = this.blockchain.networkNodes;
     const pendingTransactions = this.blockchain.pendingTransactions;
-
-    return { chains, nodes, pendingTransactions };
+    const node = this.blockchain.currentNodeUrl.slice(
+      this.blockchain.currentNodeUrl.lastIndexOf('/') + 1,
+    );
+    return { node, chains, nodes, pendingTransactions };
   }
 }

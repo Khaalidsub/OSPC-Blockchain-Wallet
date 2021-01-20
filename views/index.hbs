@@ -11,8 +11,8 @@
             <ul class="list-group d-flex-inline flex-column">
                 {{#each pendingTransactions}}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{this.transactionId}}
-                    <span> {{this.transctionType}}</span>
+                    {{formatID this.transactionId}}
+                    <span> {{this.transactionType}}</span>
                     <i>{{formatDate this.timestamp}}</i>
                 </li>
 
@@ -30,7 +30,7 @@
             <ul class="list-group d-flex-inline flex-column">
                 {{#each chains}}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{this.hash}}
+                    {{formatID this.hash}}
                     <span>{{this.index}}</span>
                     <i>{{formatDate this.timestamp}}</i>
                 </li>
@@ -41,8 +41,12 @@
 
     </div>
     <div class="col-sm-4 col-md-3">
-        <h5 class="mb-3">Latest Added Wallet Nodes</h5>
+        <h5 class="mb-3 text-center">Latest Added Wallet Nodes</h5>
+        <div class="mb-1 px-3 d-flex flex-row justify-content-between">
+            <p class="fw-bolder">Node Url</p>
 
+            <p class="fw-bolder">Registered Date</p>
+        </div>
         <ul class="list-group d-flex-inline flex-column">
             {{#each nodes}}
             <li class="list-group-item d-flex justify-content-between align-items-center">

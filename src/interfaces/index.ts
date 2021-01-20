@@ -22,11 +22,11 @@ export interface INetwork {
 }
 
 export enum TransactionType {
-  topup,
-  register,
-  booking,
-  mine,
-  certificate,
+  topup = 'topup',
+  register = 'register',
+  booking = 'booking',
+  mine = 'mine',
+  certificate = 'certificate',
 }
 
 export interface data {}
