@@ -7,6 +7,7 @@ import * as cookieParser from 'cookie-parser';
 import { AllExceptionsFilter } from './exceptions.filter';
 import { join } from 'path';
 import * as hbs from 'express-hbs';
+import { format } from 'date-fns';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {});
   const { httpAdapter } = app.get(HttpAdapterHost);
@@ -22,6 +23,9 @@ async function bootstrap() {
       }),
     );
   // app.set('view options', { layout: 'main' });
+  hbs.registerHelper('formatDate', function (date) {
+    return format(new Date(date), 'PP');
+  });
   app.engine(
     'hbs',
     hbs.express4({

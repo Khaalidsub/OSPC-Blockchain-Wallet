@@ -3,6 +3,7 @@ export interface ITransaction {
   sender: String;
   recipient: String;
   transctionType: TransactionType;
+  timestamp?: number;
   data: Object;
 }
 
