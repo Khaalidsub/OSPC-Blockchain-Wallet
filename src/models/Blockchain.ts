@@ -3,7 +3,7 @@ import { sha256 } from 'sha.js';
 import { IHashBlock, INetwork, ITransaction } from '../interfaces';
 
 const currentNodeUrls = `${process.env.URL}`;
-
+import { v1 as uuid } from 'uuid';
 @Injectable()
 export class BlockChain {
   public chain: IHashBlock[];
@@ -43,6 +43,8 @@ export class BlockChain {
   }
 
   addTransactionToPendingTransaction(transaction: ITransaction): number {
+    transaction.timestamp = Date.now();
+    transaction.transactionId = uuid();
     this.pendingTransactions.push(transaction);
     return this.getLastBlock()['index'] + 1;
   }

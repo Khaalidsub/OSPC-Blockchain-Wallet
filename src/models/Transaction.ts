@@ -4,7 +4,7 @@ export class Transaction implements ITransaction {
   constructor(
     public sender: string,
     public recipient: string,
-    public transctionType: TransactionType,
+    public transctionType: TransactionType = TransactionType.topup,
     public data: Object,
     public transactionId?: string,
   ) {}
