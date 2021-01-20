@@ -24,17 +24,9 @@ export class NodeController {
     this.logger.log(
       `register nodes and broadcast with the address: ${newNodeUrl}`,
     );
-    if (
-      isNodeExist(
-        this.blockchain.networkNodes,
-        this.blockchain.currentNodeUrl,
-        newNodeUrl,
-      )
-    )
-      this.blockchain.networkNodes.push({
-        timestamp: Date.now(),
-        nodeUrl: newNodeUrl,
-      });
+
+    this.blockchain.addNewNodeNetwork(newNodeUrl);
+
     try {
       const requestBroadcast: Promise<
         AxiosResponse<any>
@@ -45,20 +37,14 @@ export class NodeController {
       );
 
       await axios.all(requestBroadcast);
-      let networks: string[] = [];
-      this.blockchain.networkNodes.forEach(({ nodeUrl }) => {
-        if (nodeUrl !== null || nodeUrl !== undefined) {
-          this.logger.log(
-            `In the registerNodeAndBroadCast : the network url is : ${nodeUrl}`,
-          );
-          networks.push(nodeUrl);
-        }
-      });
+      let networks: string[] = this.blockchain.getNodeUrls();
 
       const requestRegisterBulk: Promise<AxiosResponse<any>>[] = postBroadcast<
         string[]
       >('node/register-nodes-bulk', this.blockchain, networks);
+
       await axios.all(requestRegisterBulk);
+
       return { note: 'New node registered with network successfully.' };
     } catch (error) {
       this.logger.error(
@@ -75,17 +61,7 @@ export class NodeController {
       this.logger.error(`undefined node url!`);
       return;
     }
-    if (
-      isNodeExist(
-        this.blockchain.networkNodes,
-        this.blockchain.currentNodeUrl,
-        newNodeUrl,
-      )
-    )
-      this.blockchain.networkNodes.push({
-        nodeUrl: newNodeUrl,
-        timestamp: Date.now(),
-      });
+    this.blockchain.addNewNodeNetwork(newNodeUrl);
 
     return { note: 'New node registered successfully.' };
   }
@@ -109,17 +85,7 @@ export class NodeController {
   registerNodeBulk(@Body() allNetworkNodes: string[]) {
     this.logger.log(`register  in bulk:... ${allNetworkNodes}`);
     allNetworkNodes.forEach((networkNodeUrl) => {
-      if (
-        isNodeExist(
-          this.blockchain.networkNodes,
-          this.blockchain.currentNodeUrl,
-          networkNodeUrl,
-        )
-      )
-        this.blockchain.networkNodes.push({
-          nodeUrl: networkNodeUrl,
-          timestamp: Date.now(),
-        });
+      this.blockchain.addNewNodeNetwork(networkNodeUrl);
     });
 
     return { note: 'Bulk registration successful.' };

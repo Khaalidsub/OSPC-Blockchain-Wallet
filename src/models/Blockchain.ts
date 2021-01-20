@@ -4,6 +4,7 @@ import { IHashBlock, INetwork, ITransaction } from '../interfaces';
 
 const currentNodeUrls = `${process.env.URL}`;
 import { v1 as uuid } from 'uuid';
+import { isNodeExist } from 'src/util';
 @Injectable()
 export class BlockChain {
   public chain: IHashBlock[];
@@ -41,12 +42,25 @@ export class BlockChain {
   getLastBlock(): IHashBlock {
     return this.chain[this.chain.length - 1];
   }
+  getNodeUrls(): string[] {
+    let networks: string[] = [];
+    this.networkNodes.forEach(({ nodeUrl }) => {
+      if (nodeUrl !== null || nodeUrl !== undefined) {
+        networks.push(nodeUrl);
+      }
+    });
+    return networks;
+  }
 
   addTransactionToPendingTransaction(transaction: ITransaction): number {
     transaction.timestamp = Date.now();
     transaction.transactionId = uuid();
     this.pendingTransactions.push(transaction);
     return this.getLastBlock()['index'] + 1;
+  }
+  addNewNodeNetwork(node: string) {
+    if (isNodeExist(this.networkNodes, this.currentNodeUrl, node))
+      this.networkNodes.push({ nodeUrl: node, timestamp: Date.now() });
   }
 
   hashBlock(
