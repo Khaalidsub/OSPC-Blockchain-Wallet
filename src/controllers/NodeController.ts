@@ -2,6 +2,7 @@ import { Logger } from '@nestjs/common';
 import { Controller } from '@nestjs/common/decorators/core';
 import { Body, Post, Get, Delete } from '@nestjs/common/decorators/http';
 import axios, { AxiosResponse } from 'axios';
+import { INetwork } from 'src/interfaces';
 import { BlockChain } from 'src/models/Blockchain';
 import { KeyMaker } from 'src/models/KeyMaker';
 
@@ -24,14 +25,17 @@ export class NodeController {
       `register nodes and broadcast with the address: ${newNodeUrl}`,
     );
     if (
-      this.blockchain.networkNodes.indexOf(newNodeUrl) == -1 &&
-      newNodeUrl !== null
+      isNodeExist(
+        this.blockchain.networkNodes,
+        this.blockchain.currentNodeUrl,
+        newNodeUrl,
+      )
     )
-      this.blockchain.networkNodes.push(newNodeUrl);
+      this.blockchain.networkNodes.push({
+        timestamp: Date.now(),
+        nodeUrl: newNodeUrl,
+      });
     try {
-      const { data } = await axios.get(`${newNodeUrl}/node`);
-      this.logger.warn(`trying ${data}`);
-
       const requestBroadcast: Promise<
         AxiosResponse<any>
       >[] = postBroadcast<string>(
@@ -41,23 +45,31 @@ export class NodeController {
       );
 
       await axios.all(requestBroadcast);
+      let networks: string[] = [];
+      this.blockchain.networkNodes.forEach(({ nodeUrl }) => {
+        if (nodeUrl !== null || nodeUrl !== undefined) {
+          this.logger.log(
+            `In the registerNodeAndBroadCast : the network url is : ${nodeUrl}`,
+          );
+          networks.push(nodeUrl);
+        }
+      });
+
       const requestRegisterBulk: Promise<AxiosResponse<any>>[] = postBroadcast<
-        String[]
-      >(
-        'node/register-nodes-bulk',
-        this.blockchain,
-        this.blockchain.networkNodes,
-      );
+        string[]
+      >('node/register-nodes-bulk', this.blockchain, networks);
       await axios.all(requestRegisterBulk);
       return { note: 'New node registered with network successfully.' };
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(
+        `In the registerNodeAndBroadCast ${this.blockchain.currentNodeUrl} and caught ${error}`,
+      );
       return error.message;
     }
   }
 
   @Post('/register-node')
-  registerNode(@Body('newNodeUrl') newNodeUrl: String) {
+  registerNode(@Body('newNodeUrl') newNodeUrl: string) {
     this.logger.log(`register node... ${newNodeUrl}`);
     if (newNodeUrl === undefined || newNodeUrl === null) {
       this.logger.error(`undefined node url!`);
@@ -70,7 +82,10 @@ export class NodeController {
         newNodeUrl,
       )
     )
-      this.blockchain.networkNodes.push(newNodeUrl);
+      this.blockchain.networkNodes.push({
+        nodeUrl: newNodeUrl,
+        timestamp: Date.now(),
+      });
 
     return { note: 'New node registered successfully.' };
   }
@@ -91,7 +106,7 @@ export class NodeController {
 
   //get the nodes from the friend you asked
   @Post('/register-nodes-bulk')
-  registerNodeBulk(@Body() allNetworkNodes: String[]) {
+  registerNodeBulk(@Body() allNetworkNodes: string[]) {
     this.logger.log(`register  in bulk:... ${allNetworkNodes}`);
     allNetworkNodes.forEach((networkNodeUrl) => {
       if (
@@ -101,7 +116,10 @@ export class NodeController {
           networkNodeUrl,
         )
       )
-        this.blockchain.networkNodes.push(networkNodeUrl);
+        this.blockchain.networkNodes.push({
+          nodeUrl: networkNodeUrl,
+          timestamp: Date.now(),
+        });
     });
 
     return { note: 'Bulk registration successful.' };

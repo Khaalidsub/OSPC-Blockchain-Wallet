@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { INetwork } from 'src/interfaces';
 import { BlockChain } from 'src/models/Blockchain';
 
 export enum Routes {
@@ -8,9 +9,9 @@ export enum Routes {
 
 export const postBroadcast = <T>(url: string, block: BlockChain, data: T) => {
   const requestPromises: Promise<AxiosResponse<any>>[] = [];
-  block.networkNodes.forEach((networkNodeUrl) => {
-    if (networkNodeUrl !== null) {
-      requestPromises.push(axios.post(`${networkNodeUrl}/${url}`, data));
+  block.networkNodes.forEach(({ nodeUrl }) => {
+    if (nodeUrl !== null) {
+      requestPromises.push(axios.post(`${nodeUrl}/${url}`, data));
     }
   });
   console.log('postBroadCast', ...requestPromises);
@@ -24,14 +25,18 @@ export const getBroadcast = <T>(url: string, block: BlockChain) => {
   return requestPromises;
 };
 export const isNodeExist = (
-  networkNodes: String[],
-  currentNode: String,
-  newNode: String,
+  networkNodes: INetwork[],
+  currentNode: string,
+  newNode: string,
 ) => {
-  const nodeNotAlreadyPresent = networkNodes.indexOf(newNode) == -1;
+  const nodeNotAlreadyPresent =
+    networkNodes.find(({ nodeUrl }) => nodeUrl === newNode) === undefined;
+  console.table(networkNodes);
+  console.log('in isNodeExist', nodeNotAlreadyPresent);
+
   const notCurrentNode = currentNode !== newNode;
-  const notNull = newNode !== null || newNode !== undefined;
-  return nodeNotAlreadyPresent && notCurrentNode && notNull;
+  // const notNull = newNode !== null || newNode !== undefined;
+  return nodeNotAlreadyPresent && notCurrentNode;
 };
 
 export const validateNodeStatus = (block: BlockChain) => {};

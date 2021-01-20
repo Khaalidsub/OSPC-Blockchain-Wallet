@@ -16,6 +16,11 @@ export interface IHashBlock {
   previousBlockHash?: String;
 }
 
+export interface INetwork {
+  nodeUrl: string;
+  timestamp?: number;
+}
+
 export enum TransactionType {
   topup,
   register,
