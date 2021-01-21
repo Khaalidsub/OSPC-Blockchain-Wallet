@@ -8,9 +8,11 @@
 ./create_transaction.sh
 ## create create_blockchain
 ./create_blockchain.sh
+## read input : y|Y to continue
+echo "Click y|Y to continue... 2"
+read first_yes
 ## register nodes
 ./init.sh
-## read input : y|Y to continue
 echo "Click y|Y to continue... 2"
 read second_yes
 ## consensus wallet 2
