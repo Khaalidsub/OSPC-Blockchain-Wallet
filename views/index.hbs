@@ -1,13 +1,13 @@
 <div class="d-flex  flex-column flex-md-row  justify-content-between">
     <div class="d-flex flex-column col-md-1 align-items-center">
         <h6 class="text-danger">Demo Purpose</h6>
-        <form action="/create-transaction">
+        <form method="post" action="/{{node}}/create-transaction">
             <button class="btn btn-primary m-2">Create Transaction</button>
         </form>
-        <form action="/create-block">
+        <form method="post" action="/{{node}}/create-block">
             <button class="btn btn-warning m-2">Create Block</button>
         </form>
-        <form method="get" action="/consensus">
+        <form method="get" action="/{{node}}/consensus">
             <button class="btn btn-danger m-2">Make Consensus</button>
         </form>
     </div>
